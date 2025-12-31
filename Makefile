@@ -16,38 +16,55 @@ define HEADER
 endef
 export HEADER
 
+#programme
+NAME= ft_ping
+
 # command compile
 CC=cc
 CFLAGS=-Wall -Wextra -Werror -g3 -O1
 
 # dependence
+LIBFT= incl/dep/libft/libft.a 
+INCLUDES = -Iincl -Iincl/dep/libft
 
 # code soure
+
+OBJS_DIR= obj
+
+FILE_C = main.c
+
 SRC= src/main.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(FILE_C:%.c=$(OBJS_DIR)/%.o)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS_DIR)/%.o: $(SRC)
+	@mkdir -p $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-TARGET: ft_ping
+all: $(LIBFT) $(NAME) header
 
-all: $(TARGET) header
+$(LIBFT):
 	@$(MAKE) -C ./incl/dep/libft/
 
 header:
 	@echo "$(BLUE)$$HEADER$(RESET)"
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS)  $(OBJ) -o $(NAME)
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME)
 
-.PHONY: all clean fclean re
+show:
+	@printf "NAME  		:$(NAME)\n"
+	@printf "CC		:$(CC)\n"
+	@printf "CFLAGS		:$(CFLAGS)\n"
+	@printf "SRC		:$(SRC)\n"
+	@printf "OBJ		:$(OBJ)\n"
 
 clean:
-	rm -f $(OBJ) $(LIBFT_OBJ)
+	rm -rf $(OBJ) $(OBJS_DIR) incl/dep/libft/obj/*.o incl/dep/libft/obj
 
 fclean: clean
-	rm -f $(TARGET)
+	rm -rf $(NAME) $(LIBFT)
 
 re: fclean all
 
+.PHONY: all show clean fclean header re

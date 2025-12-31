@@ -34,12 +34,17 @@ ADDITIONAL = ft_substr.c ft_strjoin.c ft_strtrim.c ft_itoa.c ft_strmapi.c ft_str
 
 #########################################################
 
-SRCS = ${LIBC} ${ADDITIONAL}
+FILE_C = ${LIBC} ${ADDITIONAL}
 
-OBJS = ${SRCS:.c=.o}
+SRC = src/*c
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o ${<:.c=.o}
+OBJS_DIR= obj
+
+OBJS = $(FILE_C:%.c=$(OBJS_DIR)/%.o)
+
+$(OBJS_DIR)/%.o: $(SRC)
+	mkdir -p $(OBJS_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 #########################################################
 
@@ -49,11 +54,11 @@ $(NAME): $(OBJS) $(HEAD)
 	ar rcs $(NAME) $(OBJS) $(HEAD)
 
 clean:
-	$(RM) $(OBJS) $(OBJSALL)
+	$(RM) $(OBJS) $(OBJS_DIR)
 
 fclean: clean
 	$(RM) $(NAME)
 
-re: fclean all bonus
+re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
