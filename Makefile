@@ -31,9 +31,9 @@ INCLUDES = -Iincl -Iincl/dep/libft
 
 OBJS_DIR= obj
 
-FILE_C = main.c
+FILE_C = main.c parsing.c
 
-SRC= src/main.c
+SRC= src/%.c
 
 OBJ = $(FILE_C:%.c=$(OBJS_DIR)/%.o)
 
@@ -44,7 +44,7 @@ $(OBJS_DIR)/%.o: $(SRC)
 all: $(LIBFT) $(NAME) header
 
 $(LIBFT):
-	@$(MAKE) -C ./incl/dep/libft/
+	@$(MAKE) -C incl/dep/libft/
 
 header:
 	@echo "$(BLUE)$$HEADER$(RESET)"

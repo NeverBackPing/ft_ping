@@ -2,11 +2,15 @@
 
 int main(int ac, char **av)
 {
-    (void) av;
-    if (ac != 2 && ac != 3)
+    if (ac < 2)
     {
-        ft_putstr_fd("sudo ./ft_ping [OPTION] <adresse>", 2);
+        ft_putstr_fd("sudo ./ft_ping [OPTION] <adresse>\n", 2);
         return (0);
     }
-    return (ac);
+
+    t_client client_;
+
+    check_input(&client_, av, ac);
+
+    return (0);
 }

@@ -36,7 +36,7 @@ ADDITIONAL = ft_substr.c ft_strjoin.c ft_strtrim.c ft_itoa.c ft_strmapi.c ft_str
 
 FILE_C = ${LIBC} ${ADDITIONAL}
 
-SRC = src/*c
+SRC = src/%.c
 
 OBJS_DIR= obj
 
