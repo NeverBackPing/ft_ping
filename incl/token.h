@@ -16,12 +16,12 @@ typedef struct s_tokenizer
     int token;
     char *data;
 
-    struct t_tokenizer* next;
-    struct t_tokenizer* prev;
+    struct s_tokenizer *next;
+    struct s_tokenizer *prev;
 } t_tokenizer;
 
-void			insertAtBeginning(t_tokenizer *head, int token, char *data);
-void			data_clear(t_tokenizer **lst);
+void			insertAtBeginning(t_tokenizer **tokenizer, t_tokenizer *new_node);
+void	        data_clear(t_tokenizer **tokenizer);
 void			printListForward(t_tokenizer* head);
 void			token_input(t_tokenizer **tokenizer, char **input, int nbr_input);
 
