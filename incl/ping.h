@@ -2,6 +2,7 @@
 # define PING_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <netinet/ip_icmp.h>// sockaddr_in
 
@@ -9,6 +10,7 @@
 #include "parsing.h"
 #include "hub_struct.h"
 #include "./dep/libft/libft.h"
+
 
 typedef struct s_ping
 {

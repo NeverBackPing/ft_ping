@@ -1,4 +1,4 @@
-#include <../incl/ping.h>
+#include <../incl/parsing.h>
 
 
 bool check_input(t_client *client_, char **input, int nbr_input)

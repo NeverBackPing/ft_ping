@@ -31,7 +31,7 @@ INCLUDES = -Iincl -Iincl/dep/libft
 
 OBJS_DIR= obj
 
-FILE_C = main.c parsing.c
+FILE_C = main.c parsing.c token.c
 
 SRC= src/%.c
 

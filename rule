@@ -1,0 +1,40 @@
+*Resume CMD PING*: 
+
+Ping measures the round-trip time for messages sent from the originating host to a destination computer that are echoed back to the source. 
+
+*Valid arg*:
+- ip 
+- domain name : ex - google.com
+- v : Provides more detailed output about each ping request and response
+
+*Exec command receive*
+- ping -v
+```
+ping -v www.youtube.fr          
+ping: sock4.fd: 3 (socktype: SOCK_RAW), sock6.fd: 4 (socktype: SOCK_RAW), hints.ai_family: AF_UNSPEC
+
+ai->ai_family: AF_INET6, ai->ai_canonname: 'youtube-ui.l.google.com'
+PING www.youtube.fr (2a00:1450:4007:819::200e) 56 data bytes
+64 bytes from par21s22-in-x0e.1e100.net (2a00:1450:4007:819::200e): icmp_seq=1 ident=45832 ttl=116 time=15.2 ms
+64 bytes from par21s22-in-x0e.1e100.net (2a00:1450:4007:819::200e): icmp_seq=2 ident=45832 ttl=116 time=23.0 ms
+64 bytes from par21s22-in-x0e.1e100.net (2a00:1450:4007:819::200e): icmp_seq=3 ident=45832 ttl=116 time=57.0 ms
+64 bytes from par21s22-in-x0e.1e100.net (2a00:1450:4007:819::200e): icmp_seq=4 i
+^C
+--- www.youtube.fr ping statistics ---
+20 packets transmitted, 20 received, 0% packet loss, time 19032ms
+rtt min/avg/max/mdev = 15.213/21.921/57.006/8.969 ms
+```
+
+Structure display with -v
+```
+ping [options] {destination}
+
+ping: sock4.fd: {number} socktype: {type}, sock6.fd: {number} socktype: {type}, hints.ai_family: {type}
+
+ai->.ai_family: {type},  ai->ai_canonname: {name}
+PING {destination} {IP type} 
+
+
+-flag
+-i ✅ float
+
