@@ -9,6 +9,7 @@
 #include "token.h"
 #include "parsing.h"
 #include "hub_struct.h"
+#include "../incl/lexer.h"
 #include "./dep/libft/libft.h"
 
 

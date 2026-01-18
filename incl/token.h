@@ -2,6 +2,7 @@
 # define TOKEN_H
 
 #include "ping.h"
+#include "lexer.h"
 #include "hub_struct.h"
 
 typedef enum e_token

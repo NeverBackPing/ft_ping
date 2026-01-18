@@ -109,12 +109,24 @@ void	insertAtBeginning(t_tokenizer **tokenizer, t_tokenizer *new_node)
 */
 void	token_input(t_tokenizer **tokenizer, char **input, int nbr_input)
 {
+	t_tokenizer *tmp_token;
+
+	tmp_token = NULL;
 	if (nbr_input == 2)
 	{
-		t_tokenizer *tmp_token = createt_tokenizer(ADDRESS, input[1]);
+		if (IsFlag(input[1]))
+			tmp_token = createt_tokenizer(OPTION, input[1]);
+		else
+			tmp_token = createt_tokenizer(ADDRESS, input[1]);
 		insertAtBeginning(tokenizer, tmp_token);
 		return ;
 	}
 
+	int tmp_nbr = nbr_input;
+
+	while (tmp_nbr--)
+	{
+
+	}
 
 }
