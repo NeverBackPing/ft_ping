@@ -4,7 +4,7 @@
 #include "ping.h"
 
 
-bool IsFlag(char *input);
 bool IsOption(char *input);
+bool IsFlag(char *input);
 
 #endif

@@ -7,9 +7,10 @@
 
 typedef enum e_token
 {
-    OPTION,
-    VALUE,
     ADDRESS,
+    OPTION,
+    UNKNOWN,
+    VALUE,
 } t_token;
 
 typedef struct s_tokenizer

@@ -51,11 +51,10 @@ void	data_clear(t_tokenizer **tokenizer)
 void printListForward(t_tokenizer* head)
 {
 	int count = 1;
-	char *token[] = {"OPTION", "VALUE", "ADDRESS"};
-    printf("Forward List: ");
+	char *token[] = {"ADDRESS", "OPTION","UNKNOWN", "VALUE"};
     while (head != NULL)
 	{
-        printf("%d | TOKEN= {%s} | DATA= {%s}\n", count++, token[head->token], head->data);
+        printf("%d | TOKEN = {%s} | DATA= {%s}\n", count++, token[head->token], head->data);
         head = head->next;
     }
 }
@@ -109,24 +108,36 @@ void	insertAtBeginning(t_tokenizer **tokenizer, t_tokenizer *new_node)
 */
 void	token_input(t_tokenizer **tokenizer, char **input, int nbr_input)
 {
+	int index = 1;
 	t_tokenizer *tmp_token;
 
 	tmp_token = NULL;
 	if (nbr_input == 2)
 	{
-		if (IsFlag(input[1]))
-			tmp_token = createt_tokenizer(OPTION, input[1]);
+		if (IsFlag(input[index]))
+			tmp_token = createt_tokenizer(OPTION, input[index]);
 		else
-			tmp_token = createt_tokenizer(ADDRESS, input[1]);
+			tmp_token = createt_tokenizer(ADDRESS, input[index]);
 		insertAtBeginning(tokenizer, tmp_token);
 		return ;
 	}
 
-	int tmp_nbr = nbr_input;
-
-	while (tmp_nbr--)
+	while (index < (nbr_input - 1))
 	{
-
+		if (IsFlag(input[index]))
+		{
+			tmp_token = createt_tokenizer(OPTION, input[index]);
+		}
+		else if (tmp_token->prev != NULL && tmp_token->prev->token == OPTION)
+			tmp_token = createt_tokenizer(VALUE, input[index]);
+		else
+			tmp_token = createt_tokenizer(UNKNOWN, input[index]);
+		insertAtBeginning(tokenizer, tmp_token);
+		index++;
 	}
-
+	if (tmp_token->prev != NULL && tmp_token->prev->token == OPTION)
+			tmp_token = createt_tokenizer(VALUE, input[index]);
+	else
+		tmp_token = createt_tokenizer(ADDRESS, input[index]);
+	insertAtBeginning(tokenizer, tmp_token);
 }
