@@ -7,9 +7,7 @@
 
 typedef enum e_token
 {
-    ADDRESS,
     OPTION,
-    UNKNOWN,
     VALUE,
 } t_token;
 
