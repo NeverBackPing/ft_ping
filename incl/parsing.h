@@ -4,6 +4,6 @@
 #include "ping.h"
 #include "hub_struct.h"
 
-bool check_input(t_client *client_, char **input, int nbr_input);
+bool check_input(t_client **client_, char **input, int nbr_input);
 
 #endif

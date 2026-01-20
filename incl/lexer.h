@@ -6,5 +6,7 @@
 
 bool IsOption(char *input);
 bool IsFlag(char *input);
+bool lexing(t_tokenizer *tokenizer, t_client *client_);
+
 
 #endif

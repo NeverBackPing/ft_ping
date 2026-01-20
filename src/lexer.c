@@ -1,6 +1,6 @@
 #include "../incl/lexer.h"
 
-bool IsFlag(char *input)
+bool    IsFlag(char *input)
 {
     if (!input)
         return (false);
@@ -9,14 +9,20 @@ bool IsFlag(char *input)
     return (false);
 }
 
-bool IsOption(char* str)
+bool    IsOption(char* str)
 {
     int i = 0;
-    const char* keywords[] = { "-v"};
+    const char* keywords[] = {"-v"};
     while (sizeof(keywords) / sizeof(keywords[0]))
     {
         if (ft_strncmp(str, keywords[i], ft_strlen(str)) == 0)
-            return true;
+            return (true);
     }
-    return false;
+    return (false);
+}
+
+bool lexing(t_tokenizer *tokenizer, t_client *client_)
+{
+    
+    return (false);
 }
