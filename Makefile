@@ -23,17 +23,20 @@ NAME= ft_ping
 CC=cc
 CFLAGS=-Wall -Wextra -Werror -g3 -O1
 
-# dependence
-LIBFT= incl/dep/libft/libft.a 
-INCLUDES = -Iincl -Iincl/dep/libft
-
-# code soure
-
-OBJS_DIR= obj
-
-FILE_C = main.c parsing.c token.c lexer.c
-
+# Path and target
+PATH_LIB = lib
+BUILD_DIR= build
 SRC= src/%.c
+
+# dependence
+LIBFT= $(PATH_LIB)/libft.a 
+INCLUDES = -Iincl -Idep/libft
+
+# File projet
+FILE_C = main.c
+
+# Build
+OBJS_DIR= $(BUILD_DIR)/obj
 
 OBJ = $(FILE_C:%.c=$(OBJS_DIR)/%.o)
 
@@ -41,10 +44,14 @@ $(OBJS_DIR)/%.o: $(SRC)
 	@mkdir -p $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+
+
+# compilation rules
 all: $(LIBFT) $(NAME) header
 
 $(LIBFT):
-	@$(MAKE) -C incl/dep/libft/
+	@mkdir -p $(PATH_LIB)
+	@$(MAKE) -C dep/libft/
 
 header:
 	@echo "$(BLUE)$$HEADER$(RESET)"
@@ -59,12 +66,15 @@ show:
 	@printf "SRC		:$(SRC)\n"
 	@printf "OBJ		:$(OBJ)\n"
 
+clean_not_all:
+	rm -rf $(OBJ)
+
 clean:
-	rm -rf $(OBJ) $(OBJS_DIR) incl/dep/libft/obj/*.o incl/dep/libft/obj
+	rm -rf $(OBJ) $(OBJS_DIR) $(BUILD_DIR)
 
 fclean: clean
-	rm -rf $(NAME) $(LIBFT)
+	rm -rf $(NAME) $(LIBFT) $(PATH_LIB)
 
 re: fclean all
 
-.PHONY: all show clean fclean header re
+.PHONY: all show clean_not_all clean fclean header re
