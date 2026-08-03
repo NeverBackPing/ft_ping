@@ -30,7 +30,7 @@ SRC= src/%.c
 
 # dependence
 LIBFT= $(PATH_LIB)/libft.a 
-INCLUDES = -Iincl -Idep/libft
+INCLUDES = -Iinclude -Idep/libft
 
 # File projet
 FILE_C = main.c

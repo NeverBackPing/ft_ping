@@ -4,5 +4,33 @@
 
 
 
+#include <stdio.h>
+#include <stdbool.h>
+#include <netdb.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+
+/*comment need et name*/
+enum 
+{
+    HEADER_PRINT
+};
+
+typedef struct s_ip {
+
+    char                *ip_addr;
+    char                *rev_hostname;
+    struct sockaddr_in  addr_con;
+    struct hostent      *host_server;
+
+} t_ip;
+
+typedef struct s_ping {
+
+    t_ip *ip_hdr;
+
+} t_ping;
 
 #endif
