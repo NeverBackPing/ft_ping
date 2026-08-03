@@ -33,7 +33,7 @@ LIBFT= $(PATH_LIB)/libft.a
 INCLUDES = -Iinclude -Idep/libft
 
 # File projet
-FILE_C = main.c
+FILE_C = main.c manage.c dns.c ping.c
 
 # Build
 OBJS_DIR= $(BUILD_DIR)/obj
