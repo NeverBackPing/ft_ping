@@ -1,5 +1,11 @@
 #include "../include/ping.h"
 
+void signalHandler(int sig)
+{
+    //Voir pour mettre la fonction free_struct() et addr_info()
+    _exit(sig);
+}
+
 /**
  * @brief Display like command ping 
  *  

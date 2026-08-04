@@ -6,11 +6,12 @@
 /*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:52 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/03 17:47:59 by sjossain         ###   ########.fr       */
+/*   Updated: 2026/08/04 16:36:29 by sjossain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/manage.h"
+
 
 /**
  * @brief init structure
