@@ -26,6 +26,4 @@ typedef struct s_ping
 
 } t_ping;
 
-t_ping network_trame;
-
 #endif

@@ -6,7 +6,7 @@
 /*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:52 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/04 16:36:29 by sjossain         ###   ########.fr       */
+/*   Updated: 2026/08/05 17:48:13 by sjossain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,5 @@ bool init_struct(t_ping *network_trame)
 void free_struct(t_ping *network_trame)
 {
     free(network_trame->ip_hdr);
+    network_trame = NULL;
 }

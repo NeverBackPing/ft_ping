@@ -6,7 +6,7 @@
 /*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/05 15:39:38 by sjossain         ###   ########.fr       */
+/*   Updated: 2026/08/05 17:33:25 by sjossain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,5 @@
 #include "dataStruct.h"
 
 void addr_info(t_ping *network_trame, int code_step);
-void signalHandler(int sig);
 
 #endif

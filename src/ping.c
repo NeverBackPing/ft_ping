@@ -1,12 +1,5 @@
 #include "../include/ping.h"
 
-void signalHandler(int sig)
-{
-    //Voir pour mettre la fonction free_struct() et addr_info()
-    addr_info(&network_trame, END_PRINT);
-    exit(sig);
-}
-
 /**
  * @brief Display like command ping 
  *  
@@ -23,9 +16,14 @@ void addr_info(t_ping *network_trame, int code_step)
         char ip_str[INET_ADDRSTRLEN];
         printf("FT_PING %s ", host_server->h_name);
         /*comment need*/
-        printf("( %s ) ", inet_ntop(host_server->h_addrtype, *host_server->h_addr_list, ip_str, sizeof(ip_str)));
+        printf("(%s) ", inet_ntop(host_server->h_addrtype, *host_server->h_addr_list, ip_str, sizeof(ip_str)));
         printf("<payload ICMP>(%d + ICMP Header + ICMP Header) bytes of data.\n", host_server->h_length);
         
         //PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+    }
+    else
+    {
+        printf("\n");
+        printf("END\n");
     }
 }
