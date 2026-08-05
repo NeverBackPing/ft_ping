@@ -6,14 +6,12 @@
 /*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/04 17:46:00 by sjossain         ###   ########.fr       */
+/*   Updated: 2026/08/05 15:39:38 by sjossain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PING_H
 #define PING_H
-
-
 
 //Lib include user
 #include <stdio.h>
@@ -33,5 +31,6 @@
 #include "dataStruct.h"
 
 void addr_info(t_ping *network_trame, int code_step);
+void signalHandler(int sig);
 
 #endif

@@ -5,9 +5,10 @@
 #include "ping.h"
 
 /*comment need et name*/
-enum 
+enum display
 {
-    HEADER_PRINT
+    HEADER_PRINT,
+    END_PRINT
 };
 
 typedef struct s_ip
@@ -19,11 +20,12 @@ typedef struct s_ip
 
 } t_ip;
 
-
 typedef struct s_ping
 {
     t_ip *ip_hdr;
 
 } t_ping;
+
+t_ping network_trame;
 
 #endif

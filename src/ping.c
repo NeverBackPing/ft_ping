@@ -3,7 +3,8 @@
 void signalHandler(int sig)
 {
     //Voir pour mettre la fonction free_struct() et addr_info()
-    _exit(sig);
+    addr_info(&network_trame, END_PRINT);
+    exit(sig);
 }
 
 /**

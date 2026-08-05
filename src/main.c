@@ -6,7 +6,7 @@
 /*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:41:08 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/04 15:50:28 by sjossain         ###   ########.fr       */
+/*   Updated: 2026/08/05 15:45:07 by sjossain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,16 @@
 #include "../include/dns.h"
 #include "../include/manage.h"
 
-/*bool addr_info(t_ping *network_trame)
-{
-    t_ip *ip_headr;
-    struct hostent *host_server;
-
-    ip_headr = network_trame->ip_hdr;
-    host_server = network_trame->ip_hdr->host_server;
-
-    ip_headr->ip_addr = (char *)malloc(NI_MAXHOST * sizeof(char));
-    if (!ip_headr->ip_addr)
-    {
-
-        return (true);
-    }
-
-    //strcpy(ip_headr->ip_addr, inet_ntoa(*(struct in_addr *)host_server->h_addr));
-    (ip_headr->addr_con).sin_family = host_server->h_addrtype;
-    (ip_headr->addr_con).sin_port = htons(0);
-    //(ip_headr->addr_con).sin_addr.s_addr = *(long *)host_server->h_addr;
-}*/
-
 int main(int ac, char **av)
 {
+    signal(SIGINT, signalHandler);
+    
     if (ac < 2)
     {
         printf("sudo ./ft_functionping [OPTION] <adresse>\n");
         return (0);
     }
-
-    t_ping network_trame;
-
+    //t_ping  network_trame;
     if (init_struct(&network_trame))
         return (1);
 
@@ -58,7 +37,6 @@ int main(int ac, char **av)
     }
     
     //main_loop(icmp_sock, packet, packlen);
-
 
     free_struct(&network_trame);
     return (0);
