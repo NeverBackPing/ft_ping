@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ping.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
+/*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/05 17:33:25 by sjossain         ###   ########.fr       */
+/*   Updated: 2026/08/07 00:49:49 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,13 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <bits/socket.h>
 
 //Lib the project ft_ping
 #include "dns.h"
 #include "manage.h"
 #include "dataStruct.h"
+#include "../dep/libft/libft.h"
 
 void addr_info(t_ping *network_trame, int code_step);
 

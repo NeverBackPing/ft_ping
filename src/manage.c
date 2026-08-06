@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
+/*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:52 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/05 17:48:13 by sjossain         ###   ########.fr       */
+/*   Updated: 2026/08/07 01:41:48 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@ bool init_struct(t_ping *network_trame)
  */
 void free_struct(t_ping *network_trame)
 {
+    if (network_trame->ip_hdr->rev_hostname)
+        free(network_trame->ip_hdr->rev_hostname);
+    if (network_trame->ip_hdr->ip_addr)
+        free(network_trame->ip_hdr->ip_addr);
     free(network_trame->ip_hdr);
     network_trame = NULL;
 }

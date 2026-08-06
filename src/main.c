@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjossain <sjossain@student.42.fr>          +#+  +:+       +#+        */
+/*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:41:08 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/05 17:50:11 by sjossain         ###   ########.fr       */
+/*   Updated: 2026/08/07 01:27:30 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,40 @@ void signalHandler(int sig)
     free_struct(&network_trame);
     exit(sig);
 }
+/**
+ * @brief A reverse DNS record is simply an entry that 
+ *        resolves an IP address back to a host name
+ * 
+ * @param network_trame Struct content information of the trame
+ */
+bool reverse(t_ping *network_trame)
+{
+    t_ip                *ip_header;
+    char                buf[1025];
+
+    ip_header = network_trame->ip_hdr;
+    
+    ip_header->addr_con.sin_family = AF_INET; //IP version 
+    printf("ICI\n");
+    printf("ip_addr = %s\n", ip_header->ip_addr);
+    
+    ip_header->addr_con.sin_addr.s_addr = inet_addr(ip_header->ip_addr); // binary data in network byte order.
+    int i = getnameinfo((const struct sockaddr *)&ip_header->addr_con, sizeof(ip_header->addr_con), buf, sizeof(buf), NULL, 0, NI_NAMEREQD);
+    printf("i = %d\n", i);
+    if (i)
+    {
+        printf("ft_ping: Could not resolve reverse lookup of hostname\n");
+        free_struct(network_trame);
+        return (true);
+    }
+    ip_header->rev_hostname = (char *)malloc((ft_strlen(buf) + 1) * sizeof(char));
+    ft_strlcpy(ip_header->rev_hostname, buf, ft_strlen(buf));
+
+    printf("ip_addr = %s\n", ip_header->rev_hostname);
+
+    
+    return (false);
+}
 
 int main(int ac, char **av)
 {
@@ -42,6 +76,9 @@ int main(int ac, char **av)
     if (lookup(av[ac - 1], &network_trame))
         return (0);
 
+    if (reverse(&network_trame))
+        return (0);
+    printf("hostname: %s\n", network_trame.ip_hdr->rev_hostname);
     while (true)
     {
 

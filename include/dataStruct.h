@@ -15,6 +15,7 @@ typedef struct s_ip
 {
     char                *ip_addr;
     char                *rev_hostname;
+    struct sockaddr         sa;
     struct sockaddr_in  addr_con;
     struct hostent      *host_server;
 
