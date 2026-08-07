@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:50:20 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/07 01:40:45 by never            ###   ########.fr       */
+/*   Updated: 2026/08/07 19:56:33 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	i = 0;
 	if (size == 0)
 		return (ft_strlen(src));
-	while (src[i] != '\0' && i < size - 1)
+	while (src[i] != '\0' && i < size)
 	{
 		dest[i] = src[i];
 		i++;
@@ -34,7 +34,7 @@ size_t	ft_strcpy(char *dest, const char *src)
 	size_t	i;
 
 	i = 0;
-	while (src[i] != '\0' && i < ft_strlen(src) - 1)
+	while (src[i] != '\0' && i < ft_strlen(src))
 	{
 		dest[i] = src[i];
 		i++;

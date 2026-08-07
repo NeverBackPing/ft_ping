@@ -32,10 +32,8 @@ bool lookup(char *ip_hostg, t_ping *network_trame)
     
     // Fill up address structure
     ft_strcpy(ip_headr->ip_addr, ip_headr->host_server->h_name);
-    printf("ip_addr = %s\n", ip_headr->host_server->h_name);
-    printf("ip_addr = %s\n", ip_headr->ip_addr);
-    (ip_headr->addr_con).sin_family = ip_headr->host_server->h_addrtype;
+    (ip_headr->addr_con).sin_family = ip_headr->host_server->h_addrtype; // IP version
     (ip_headr->addr_con).sin_port = htons(0); // Addresse de socket
-    (ip_headr->addr_con).sin_addr.s_addr = *(long *)ip_headr->host_server->h_addr_list;
+    (ip_headr->addr_con).sin_addr.s_addr = *(long *)ip_headr->host_server->h_addr_list; // 
     return (false);
 }

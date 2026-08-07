@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/07 00:49:49 by never            ###   ########.fr       */
+/*   Updated: 2026/08/07 19:24:15 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <bits/socket.h>
+#include <netinet/in.h>
 
 //Lib the project ft_ping
 #include "dns.h"

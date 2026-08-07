@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:41:08 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/07 01:27:30 by never            ###   ########.fr       */
+/*   Updated: 2026/08/07 20:04:47 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,12 @@
 #include "../include/manage.h"
 #include "../include/dataStruct.h"
 
-t_ping  network_trame;
+bool loop_icmp;
 
 void signalHandler(int sig)
 {
-    //Voir pour mettre la fonction free_struct() et addr_info()
-    addr_info(&network_trame, END_PRINT);
-    free_struct(&network_trame);
-    exit(sig);
+    (void)sig;
+    loop_icmp = false;
 }
 /**
  * @brief A reverse DNS record is simply an entry that 
@@ -33,30 +31,27 @@ void signalHandler(int sig)
  */
 bool reverse(t_ping *network_trame)
 {
-    t_ip                *ip_header;
-    char                buf[1025];
+    int     register_ptr;
+    t_ip    *ip_header;
+    char    buf[NI_MAXHOST];
 
     ip_header = network_trame->ip_hdr;
     
     ip_header->addr_con.sin_family = AF_INET; //IP version 
-    printf("ICI\n");
-    printf("ip_addr = %s\n", ip_header->ip_addr);
     
     ip_header->addr_con.sin_addr.s_addr = inet_addr(ip_header->ip_addr); // binary data in network byte order.
-    int i = getnameinfo((const struct sockaddr *)&ip_header->addr_con, sizeof(ip_header->addr_con), buf, sizeof(buf), NULL, 0, NI_NAMEREQD);
-    printf("i = %d\n", i);
-    if (i)
+    register_ptr = getnameinfo((const struct sockaddr *)&ip_header->addr_con,\
+    sizeof(struct sockaddr), buf, NI_MAXHOST, NULL, 0, NI_NAMEREQD);
+    if (register_ptr)
     {
         printf("ft_ping: Could not resolve reverse lookup of hostname\n");
         free_struct(network_trame);
         return (true);
     }
-    ip_header->rev_hostname = (char *)malloc((ft_strlen(buf) + 1) * sizeof(char));
-    ft_strlcpy(ip_header->rev_hostname, buf, ft_strlen(buf));
-
-    printf("ip_addr = %s\n", ip_header->rev_hostname);
-
     
+    ip_header->rev_hostname = (char *)malloc((ft_strlen(buf) + 1) * sizeof(char));
+    ft_strcpy(ip_header->rev_hostname, buf);
+
     return (false);
 }
 
@@ -67,6 +62,10 @@ int main(int ac, char **av)
         printf("sudo ./ft_functionping [OPTION] <adresse>\n");
         return (0);
     }
+
+    loop_icmp = true;
+    
+    t_ping  network_trame;
     
     if (init_struct(&network_trame))
         return (1);
@@ -78,12 +77,15 @@ int main(int ac, char **av)
 
     if (reverse(&network_trame))
         return (0);
-    printf("hostname: %s\n", network_trame.ip_hdr->rev_hostname);
-    while (true)
-    {
 
+    while (loop_icmp)
+    {
+        sleep(1);
     }
     
+    addr_info(&network_trame, END_PRINT);
+    
+    free_struct(&network_trame);
     //main_loop(icmp_sock, packet, packlen);
     return (0);
 }
