@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:41:08 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/07 20:04:47 by never            ###   ########.fr       */
+/*   Updated: 2026/08/08 21:32:13 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,37 +29,23 @@ void signalHandler(int sig)
  * 
  * @param network_trame Struct content information of the trame
  */
-bool reverse(t_ping *network_trame)
+
+void open_socked(t_ping  *network_trame)
 {
-    int     register_ptr;
-    t_ip    *ip_header;
-    char    buf[NI_MAXHOST];
-
-    ip_header = network_trame->ip_hdr;
-    
-    ip_header->addr_con.sin_family = AF_INET; //IP version 
-    
-    ip_header->addr_con.sin_addr.s_addr = inet_addr(ip_header->ip_addr); // binary data in network byte order.
-    register_ptr = getnameinfo((const struct sockaddr *)&ip_header->addr_con,\
-    sizeof(struct sockaddr), buf, NI_MAXHOST, NULL, 0, NI_NAMEREQD);
-    if (register_ptr)
+    network_trame->socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    if (network_trame->socket < 0)
     {
-        printf("ft_ping: Could not resolve reverse lookup of hostname\n");
+        printf("Error: Socket file descriptor not received!\n");
         free_struct(network_trame);
-        return (true);
+        exit(1);
     }
-    
-    ip_header->rev_hostname = (char *)malloc((ft_strlen(buf) + 1) * sizeof(char));
-    ft_strcpy(ip_header->rev_hostname, buf);
-
-    return (false);
 }
 
 int main(int ac, char **av)
 {
     if (ac < 2)
     {
-        printf("sudo ./ft_functionping [OPTION] <adresse>\n");
+        printf("sudo ./ft_ping [OPTION] <adresse>\n");
         return (0);
     }
 
@@ -78,6 +64,8 @@ int main(int ac, char **av)
     if (reverse(&network_trame))
         return (0);
 
+    open_socked(&network_trame);
+    
     while (loop_icmp)
     {
         sleep(1);
