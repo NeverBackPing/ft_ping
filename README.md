@@ -4,6 +4,11 @@
 
 Schéma: [Packet formats](https://homepages.uc.edu/~thomam/Net1/Packet_Formats)
 
+
+
+![protocole](/asset/img/socket.png)
+
+
 ```bash
                 Message ICMP
 ┌────────────────────────────────────────────────┐

@@ -23,7 +23,8 @@ typedef struct s_ip
 
 typedef struct s_ping
 {
-    t_ip *ip_hdr;
+    int     socket;
+    t_ip    *ip_hdr;
 
 } t_ping;
 
