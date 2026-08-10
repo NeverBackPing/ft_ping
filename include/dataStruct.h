@@ -11,6 +11,11 @@ enum display
     END_PRINT
 };
 
+typedef struct s_icmp_headedr
+{
+    struct icmphdr header;
+} t_icmp_headedr;
+
 typedef struct s_ip
 {
     char                *ip_addr;
@@ -18,6 +23,7 @@ typedef struct s_ip
     struct sockaddr         sa;
     struct sockaddr_in  addr_con;
     struct hostent      *host_server;
+    t_icmp_headedr      icmp_v4;
 
 } t_ip;
 
@@ -27,5 +33,7 @@ typedef struct s_ping
     t_ip    *ip_hdr;
 
 } t_ping;
+
+#define PING_SLEEP_RATE 1000000 
 
 #endif

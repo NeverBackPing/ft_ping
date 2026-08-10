@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/07 19:24:15 by never            ###   ########.fr       */
+/*   Updated: 2026/08/09 22:14:11 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <sys/socket.h>
 #include <bits/socket.h>
 #include <netinet/in.h>
+#include <netinet/ip_icmp.h>
 
 //Lib the project ft_ping
 #include "dns.h"
@@ -33,6 +34,8 @@
 #include "dataStruct.h"
 #include "../dep/libft/libft.h"
 
+void open_socked(t_ping  *network_trame);
 void addr_info(t_ping *network_trame, int code_step);
+void icmp_network(t_ping *network_trame, char **input);
 
 #endif

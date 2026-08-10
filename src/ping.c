@@ -1,5 +1,54 @@
 #include "../include/ping.h"
 
+bool loop_icmp;
+
+void signal_exit_loop_cmp(int sig)
+{
+    (void)sig;
+    loop_icmp = false;
+}
+
+/**
+ * @brief Open communication with another computer
+ * 
+ * @param network_trame Struct content information of the trame
+ */
+void open_socked(t_ping  *network_trame)
+{
+    network_trame->socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    if (network_trame->socket < 0)
+    {
+        printf("Error: Socket file descriptor not received!\n");
+        free_struct(network_trame);
+        exit(1);
+    }
+}
+
+void icmp_network(t_ping *network_trame, char **input)
+{
+    t_ip            *ip_header;
+    struct hostent  *host_server;
+
+    loop_icmp = true;
+    ip_header = network_trame->ip_hdr;
+    host_server = network_trame->ip_hdr->host_server;
+
+    (void) input;
+    (void) ip_header;
+    (void) host_server;
+    
+    signal(SIGINT, signal_exit_loop_cmp);
+
+    while (loop_icmp)
+    {
+        sleep(PING_SLEEP_RATE);
+    }
+    
+    addr_info(network_trame, END_PRINT);
+    free_struct(network_trame);
+    exit(0);
+}
+
 /**
  * @brief Display like command ping 
  *  

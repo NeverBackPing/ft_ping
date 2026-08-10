@@ -22,4 +22,6 @@ Schéma: [Packet formats](https://homepages.uc.edu/~thomam/Net1/Packet_Formats)
 └────────────────────────────────────────────────┘
 ```
 
+![protocole](/asset/img/socket_client_server.png)
+
 type: [type message](https://www.geeksforgeeks.org/computer-networks/internet-control-message-protocol-icmp/)
