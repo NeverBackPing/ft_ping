@@ -22,8 +22,6 @@ bool lookup(char *ip_hostg, t_ping *network_trame)
         exit(1);
     }
 
-    addr_info(network_trame, HEADER_PRINT);
-
     ip_headr->ip_addr = (char *)malloc(NI_MAXHOST * sizeof(char));
     if (!ip_headr->ip_addr)
     {

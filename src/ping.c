@@ -109,12 +109,14 @@ void icmp_network(t_ping *network_trame, char **input)
     
     socket_option(network_trame);
 
+    addr_info(network_trame, HEADER_PRINT);
+
     signal(SIGINT, signal_exit_loop_cmp);
 
     while (loop_icmp)
     {
         // create packet and set header icmp
-        create_packet(network_trame, network_trame->ip_hdr->icmp_v4);
+        create_packet(network_trame, network_trame->ip_hdr->icmp_v4, "hello");
         // 1sec
         usleep(PING_SLEEP_RATE);
     }
@@ -148,9 +150,18 @@ void addr_info(t_ping *network_trame, int code_step)
         printf("(%s) ", inet_ntop(host_server->h_addrtype, *host_server->h_addr_list, ip_str, sizeof(ip_str)));
 
         // 56(84) bytes of data.
-        printf("<payload ICMP>(%d + ICMP Header + ICMP Header) bytes of data.\n", host_server->h_length);
+        printf("%ld(%ld) bytes of data.\n", \
+            (DATA_SIZE - sizeof(network_trame->ip_hdr->icmp_v4->header)), \
+            (DATA_SIZE - sizeof(network_trame->ip_hdr->icmp_v4->header)+\
+            sizeof(network_trame->ip_hdr->icmp_v4->header)+\
+            sizeof(network_trame->ip_hdr->sa)));
+            /*sizeof(network_trame->ip_hdr->icmp_v4)->header.code+\
+            sizeof(network_trame->ip_hdr->icmp_v4)->header.checksum+\
+            sizeof(host_server->h_length)+\
+            sizeof(host_server->h_addr_list));*/
 
         //PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+        // (ICMP Header + ICMP msg  + IPv4)
     }
     else
     {
