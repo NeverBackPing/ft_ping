@@ -15,7 +15,7 @@ enum display
 };
 
 /*Time*/
-struct s_time_packet
+typedef struct s_time_packet
 {
     // unity: nanosecondes
     struct timespec tfs;
@@ -39,7 +39,7 @@ typedef struct s_ip
     char                *ip_addr; // IPv4
     char                *rev_hostname; // Reverse hostname IP
     struct hostent      *host_server; // Datas for single hostname (addr, name host, len, list addr)
-    t_icmp_headedr      icmp_v4; // Protocole ICMP for Ipv4
+    t_icmp_headedr      *icmp_v4; // Protocole ICMP for Ipv4
     struct sockaddr     sa; // Internet socket address (Port, Ip addr IPv4)
     struct sockaddr_in  addr_con; // Internet socket address (Port, Ip addr IPv4)
 } t_ip;
@@ -47,12 +47,15 @@ typedef struct s_ip
 /*Command ping*/
 typedef struct s_ping
 {
-    int                 socket; // Interface of communication
+    int                     count_pck_received; // packet receiv
+    int                     count_pck_send; // count packeyt send
+    int                     ttl_size; // size protocole
+    int                     socket; // Interface of communication
     long double             rtt_ms; // Round-Trip Time  in microseconde
     long double             total_ms; // total in microseconde
     t_ip                    *ip_hdr; // IP header
     struct timeval          time_nano_out; //Time send packet unity: microseconde
-    struct t_time_packet    *tm_packet; //clock manager
+    t_time_packet           *tm_packet; //clock manager
 } t_ping;
 
 #endif

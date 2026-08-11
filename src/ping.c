@@ -24,9 +24,72 @@ void open_socked(t_ping  *network_trame)
     }
 }
 
+// Calculate the checksum (RFC 1071)
+unsigned short checksum(void *b, int len)
+{
+    unsigned short  *buf;
+    unsigned int    sum;
+    unsigned short  result;
+
+    buf = b;
+    sum = 0;
+
+    for (sum = 0; len > 1; len -= 2)
+        sum += *buf++;
+
+    if (len == 1)
+        sum += *(unsigned char *)buf;
+
+    sum = (sum >> 16) + (sum & 0xFFFF);
+    sum += (sum >> 16);
+
+    result = ~sum;
+
+    return (result);
+}
+
+void    socket_option(t_ping  *network_trame)
+{
+    if (setsockopt(network_trame->socket, SOL_IP, IP_TTL, \
+        &network_trame->ttl_size, sizeof(network_trame->ttl_size)) != 0)
+    {
+        printf("\nError: Setting socket options to TTL failed!\n");
+        free_struct(network_trame);
+        exit(1);
+    } 
+
+}
+
 void chrono_time(int CLOCK, struct timespec *time)
 {
     clock_gettime(CLOCK, time); //sans risque d'erreurs si l'heure du système change
+}
+
+void create_packet(t_ping *network_trame, t_icmp_headedr *packet_icmp, char *msg)
+{
+    size_t  i;
+
+    // Fill the packet
+    ft_bzero(packet_icmp, sizeof(packet_icmp));
+    packet_icmp->header.type = ICMP_ECHO;
+    packet_icmp->header.un.echo.id = getpid();
+
+
+    for (i = 0; i < sizeof(packet_icmp->msg); i++)
+    {
+        packet_icmp->msg[i] =  msg[i];
+        if (i + 1 == sizeof(packet_icmp->msg))
+        {
+            i++;
+            break;
+        }
+        i++;
+    }
+
+    packet_icmp->msg[i] = '\0';
+    packet_icmp->header.un.echo.sequence = network_trame->count_pck_send++;
+    packet_icmp->header.checksum = checksum(&packet_icmp, sizeof(packet_icmp));
+    
 }
 
 void icmp_network(t_ping *network_trame, char **input)
@@ -42,14 +105,21 @@ void icmp_network(t_ping *network_trame, char **input)
     (void) ip_header;
     (void) host_server;
 
-    chrono_time(CLOCK_MONOTONIC, &network_trame->tm_packet.tfs);
+    chrono_time(CLOCK_MONOTONIC, &network_trame->tm_packet->tfs);
     
+    socket_option(network_trame);
+
     signal(SIGINT, signal_exit_loop_cmp);
 
     while (loop_icmp)
     {
-        usleep(PING_SLEEP_RATE); // 1sec
+        // create packet and set header icmp
+        create_packet(network_trame, network_trame->ip_hdr->icmp_v4);
+        // 1sec
+        usleep(PING_SLEEP_RATE);
     }
+
+    chrono_time(CLOCK_MONOTONIC, &network_trame->tm_packet->tfe);
     
     addr_info(network_trame, END_PRINT);
     free_struct(network_trame);
