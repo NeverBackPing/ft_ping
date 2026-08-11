@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/09 22:14:11 by never            ###   ########.fr       */
+/*   Updated: 2026/08/11 01:34:36 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define PING_H
 
 //Lib include user
+#include <time.h>
 #include <stdio.h>
 #include <netdb.h>
 #include <string.h>
@@ -23,10 +24,12 @@
 #include <stdbool.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 #include <bits/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>
+#include <bits/types/struct_timespec.h>
 
 //Lib the project ft_ping
 #include "dns.h"

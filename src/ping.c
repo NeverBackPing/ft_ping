@@ -24,6 +24,11 @@ void open_socked(t_ping  *network_trame)
     }
 }
 
+void chrono_time(int CLOCK, struct timespec *time)
+{
+    clock_gettime(CLOCK, time); //sans risque d'erreurs si l'heure du système change
+}
+
 void icmp_network(t_ping *network_trame, char **input)
 {
     t_ip            *ip_header;
@@ -36,12 +41,14 @@ void icmp_network(t_ping *network_trame, char **input)
     (void) input;
     (void) ip_header;
     (void) host_server;
+
+    chrono_time(CLOCK_MONOTONIC, &network_trame->tm_packet.tfs);
     
     signal(SIGINT, signal_exit_loop_cmp);
 
     while (loop_icmp)
     {
-        sleep(PING_SLEEP_RATE);
+        usleep(PING_SLEEP_RATE); // 1sec
     }
     
     addr_info(network_trame, END_PRINT);
@@ -57,17 +64,22 @@ void icmp_network(t_ping *network_trame, char **input)
  */
 void addr_info(t_ping *network_trame, int code_step)
 {
-    struct hostent *host_server;
+    struct hostent  *host_server;
 
     host_server = network_trame->ip_hdr->host_server;
     if (code_step == 0)
     {
         char ip_str[INET_ADDRSTRLEN];
-        printf("FT_PING %s ", host_server->h_name);
-        /*comment need*/
+
+        //PING 8.8.8.8
+        printf("FT_PING %s ", host_server->h_name); 
+
+        // (8.8.8.8)
         printf("(%s) ", inet_ntop(host_server->h_addrtype, *host_server->h_addr_list, ip_str, sizeof(ip_str)));
+
+        // 56(84) bytes of data.
         printf("<payload ICMP>(%d + ICMP Header + ICMP Header) bytes of data.\n", host_server->h_length);
-        
+
         //PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
     }
     else

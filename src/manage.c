@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:52 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/08 12:04:06 by never            ###   ########.fr       */
+/*   Updated: 2026/08/11 01:54:08 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,17 @@ bool init_struct(t_ping *network_trame)
         exit(1);
     }
     
-    network_trame->socket = -1;
+    network_trame->tm_packet = (struct s_time_packet *) malloc(sizeof(t_time_packet));
+    
+    if (network_trame->tm_packet ==  NULL)
+    {
+        printf("Error: malloc error\n");
+        exit(1);
+    }
+    
+    network_trame->time_nano_out.tv_usec = 0; // Run start
+    network_trame->time_nano_out.tv_sec = 1; //Timout 1 sec 
+    network_trame->socket = -1; // interface communication
     network_trame->ip_hdr->ip_addr = NULL;
     network_trame->ip_hdr->rev_hostname = NULL;
     return (false);
@@ -49,6 +59,8 @@ void free_struct(t_ping *network_trame)
         free(network_trame->ip_hdr->rev_hostname);
     if (network_trame->ip_hdr->ip_addr != NULL)
         free(network_trame->ip_hdr->ip_addr);
+    if (network_trame->tm_packet  != NULL)
+        free(network_trame->tm_packet);
     free(network_trame->ip_hdr);
     network_trame = NULL;
 }
