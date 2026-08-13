@@ -92,6 +92,16 @@ void create_packet(t_ping *network_trame, t_icmp_headedr *packet_icmp, char *msg
     
 }
 
+void    send_pkt(t_ping *network_trame, t_icmp_headedr *icmp_v4, struct timespec time)
+{
+    clock_gettime(CLOCK_MONOTONIC, &time);
+    if (!sendto(network_trame->socket, icmp_v4, sizeof(icmp_v4), 0,  (struct sockaddr*)&network_trame->ip_hdr->addr_con, sizeof(network_trame->ip_hdr->addr_con)))
+    {
+        printf("\nError: Packet Sending Failed!\n");
+    }
+}
+
+
 void icmp_network(t_ping *network_trame, char **input)
 {
     t_ip            *ip_header;
@@ -116,9 +126,12 @@ void icmp_network(t_ping *network_trame, char **input)
     while (loop_icmp)
     {
         // create packet and set header icmp
-        create_packet(network_trame, network_trame->ip_hdr->icmp_v4, "hello");
+        create_packet(network_trame, network_trame->ip_hdr->icmp_v4, "hellod");
         // 1sec
         usleep(PING_SLEEP_RATE);
+
+        // Send packet
+        send_pkt(network_trame, network_trame->ip_hdr->icmp_v4, network_trame->tm_packet->time_start);
     }
 
     chrono_time(CLOCK_MONOTONIC, &network_trame->tm_packet->tfe);
@@ -155,10 +168,6 @@ void addr_info(t_ping *network_trame, int code_step)
             (DATA_SIZE - sizeof(network_trame->ip_hdr->icmp_v4->header)+\
             sizeof(network_trame->ip_hdr->icmp_v4->header)+\
             sizeof(network_trame->ip_hdr->sa)));
-            /*sizeof(network_trame->ip_hdr->icmp_v4)->header.code+\
-            sizeof(network_trame->ip_hdr->icmp_v4)->header.checksum+\
-            sizeof(host_server->h_length)+\
-            sizeof(host_server->h_addr_list));*/
 
         //PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
         // (ICMP Header + ICMP msg  + IPv4)
