@@ -28,9 +28,8 @@ typedef struct s_time_packet
 /*ICMP*/
 typedef struct s_icmp_headedr
 {
-    int             checksum; // 
-    char            msg[DATA_SIZE - sizeof(struct icmphdr)]; // 56 octets
     struct icmphdr  header; // 8 octets
+    char            msg[DATA_SIZE - sizeof(struct icmphdr)]; // 56 octets
 } t_icmp_headedr;
 
 /*IP*/
@@ -38,21 +37,25 @@ typedef struct s_ip
 {
     char                *ip_addr; // IPv4
     char                *rev_hostname; // Reverse hostname IP
+
     struct hostent      *host_server; // Datas for single hostname (addr, name host, len, list addr)
     t_icmp_headedr      *icmp_v4; // Protocole ICMP for Ipv4
-    struct sockaddr     sa; // Internet socket address (Port, Ip addr IPv4)
-    struct sockaddr_in  addr_con; // Internet socket address (Port, Ip addr IPv4)
+    struct sockaddr_in  *dest_addr; // Internet socket address client (Port, Ip addr IPv4)
+    struct sockaddr_in  src_addr; // Internet socket address server (Port, Ip addr IPv4)
 } t_ip;
 
 /*Command ping*/
 typedef struct s_ping
 {
-    int                     count_pck_received; // packet receiv
+    char                    receiv_buffer[4096];
     int                     count_pck_send; // count packeyt send
+    int                     count_pck_received; // packet receiv
     int                     ttl_size; // size protocole
     int                     socket; // Interface of communication
+
     long double             rtt_ms; // Round-Trip Time  in microseconde
     long double             total_ms; // total in microseconde
+
     t_ip                    *ip_hdr; // IP header
     struct timeval          time_nano_out; //Time send packet unity: microseconde
     t_time_packet           *tm_packet; //clock manager

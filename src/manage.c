@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:52 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/11 01:54:08 by never            ###   ########.fr       */
+/*   Updated: 2026/08/15 00:44:16 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool init_struct(t_ping *network_trame)
     
     if (network_trame->ip_hdr ==  NULL)
     {
-        printf("Error: malloc error\n");
+        printf("\033[31mError\033[0m: malloc \033[31mError\033[0m\n");
         exit(1);
     }
     
@@ -35,7 +35,7 @@ bool init_struct(t_ping *network_trame)
     if (network_trame->tm_packet ==  NULL)
     {
         free(network_trame->ip_hdr);
-        printf("Error: malloc error\n");
+        printf("\033[31mError\033[0m: malloc \033[31mError\033[0m\n");
         exit(1);
     }
 
@@ -44,10 +44,19 @@ bool init_struct(t_ping *network_trame)
     if (network_trame->ip_hdr->icmp_v4 ==  NULL)
     {
         free(network_trame->ip_hdr->icmp_v4);
-        printf("Error: malloc error\n");
+        printf("\033[31mError\033[0m: malloc \033[31mError\033[0m\n");
         exit(1);
     }
 
+    network_trame->ip_hdr->dest_addr = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));
+    
+    if (network_trame->ip_hdr->dest_addr ==  NULL)
+    {
+        free(network_trame->ip_hdr->dest_addr);
+        printf("\033[31mError\033[0m: malloc \033[31mError\033[0m\n");
+        exit(1);
+    }
+    
     network_trame->count_pck_send = 0; // count of packet send
     network_trame->socket = -1; // interface communication
     network_trame->ttl_size = DATA_SIZE; // Value de l'option  TTL (Time to Live)
@@ -68,17 +77,27 @@ bool init_struct(t_ping *network_trame)
  */
 void free_struct(t_ping *network_trame)
 {
-    if (network_trame->socket >=  0)
-        close(network_trame->socket);
-    network_trame->socket = -1;
-    if (network_trame->ip_hdr->icmp_v4 != NULL)
-        free(network_trame->ip_hdr->icmp_v4);
-    if (network_trame->ip_hdr->rev_hostname)
-        free(network_trame->ip_hdr->rev_hostname);
-    if (network_trame->ip_hdr->ip_addr != NULL)
-        free(network_trame->ip_hdr->ip_addr);
     if (network_trame->tm_packet  != NULL)
         free(network_trame->tm_packet);
+        
+    if (network_trame->socket >=  0)
+    {
+        close(network_trame->socket);
+        network_trame->socket = -1;
+    }
+    
+    if (network_trame->ip_hdr->rev_hostname != NULL)
+        free(network_trame->ip_hdr->rev_hostname);
+    
+    if (network_trame->ip_hdr->ip_addr != NULL)
+        free(network_trame->ip_hdr->ip_addr);
+    
+    if (network_trame->ip_hdr->icmp_v4 != NULL)
+        free(network_trame->ip_hdr->icmp_v4);
+        
+    if (network_trame->ip_hdr->dest_addr != NULL)
+        free(network_trame->ip_hdr->dest_addr);
+        
     free(network_trame->ip_hdr);
     network_trame = NULL;
 }

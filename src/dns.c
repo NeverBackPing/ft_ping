@@ -25,16 +25,20 @@ bool lookup(char *ip_hostg, t_ping *network_trame)
     ip_headr->ip_addr = (char *)malloc(NI_MAXHOST * sizeof(char));
     if (!ip_headr->ip_addr)
     {
-        printf("Error: Init malloc\n");
+        printf("\033[31mError\033[0m: Init malloc\n");
         free_struct(network_trame);
         exit(1);
     }
     
     // Fill up address structure
     ft_strcpy(ip_headr->ip_addr, ip_headr->host_server->h_name);
-    (ip_headr->addr_con).sin_family = ip_headr->host_server->h_addrtype; // IP version
-    (ip_headr->addr_con).sin_port = htons(0); // Addresse de socket
-    (ip_headr->addr_con).sin_addr.s_addr = *(long *)ip_headr->host_server->h_addr_list; // IP 
+    ip_headr->dest_addr->sin_port = htons(0); // Addresse de socket
+    ip_headr->dest_addr->sin_family = ip_headr->host_server->h_addrtype; // IP version
+    ft_memcpy(
+        &ip_headr->dest_addr->sin_addr,
+        ip_headr->host_server->h_addr_list[0],
+        sizeof(ip_headr->dest_addr->sin_addr)
+    ); // IP 
     return (false);
 }
 
@@ -53,10 +57,14 @@ bool reverse(t_ping *network_trame)
 
     ip_header = network_trame->ip_hdr;
     
-    ip_header->addr_con.sin_family = AF_INET; //IP version 
-    
-    ip_header->addr_con.sin_addr.s_addr = inet_addr(ip_header->ip_addr); // binary data in network byte order.
-    register_ptr = getnameinfo((const struct sockaddr *)&ip_header->addr_con,\
+    ip_header->dest_addr->sin_family = AF_INET; //IP version 
+    ip_header->dest_addr->sin_port = htons(0);  // port
+    ft_memcpy(
+        &ip_header->dest_addr->sin_addr,
+        ip_header->host_server->h_addr_list[0],
+        sizeof(ip_header->dest_addr->sin_addr)
+    ); // IP  // binary data in network byte order.
+    register_ptr = getnameinfo((const struct sockaddr *)&ip_header->dest_addr,\
     sizeof(struct sockaddr), buf, NI_MAXHOST, NULL, 0, NI_NAMEREQD);
     if (register_ptr)
     {

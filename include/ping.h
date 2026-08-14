@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/11 01:34:36 by never            ###   ########.fr       */
+/*   Updated: 2026/08/15 01:00:33 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 //Lib include user
 #include <time.h>
+#include <errno.h>
 #include <stdio.h>
 #include <netdb.h>
 #include <string.h>

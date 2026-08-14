@@ -18,7 +18,7 @@ void open_socked(t_ping  *network_trame)
     network_trame->socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (network_trame->socket < 0)
     {
-        printf("Error: Socket file descriptor not received!\n");
+        printf("\033[31mError\033[0m: Socket file descriptor not received!\n");
         free_struct(network_trame);
         exit(1);
     }
@@ -53,11 +53,10 @@ void    socket_option(t_ping  *network_trame)
     if (setsockopt(network_trame->socket, SOL_IP, IP_TTL, \
         &network_trame->ttl_size, sizeof(network_trame->ttl_size)) != 0)
     {
-        printf("\nError: Setting socket options to TTL failed!\n");
+        printf("\n\033[31mError\033[0m: Setting socket options to TTL failed!\n");
         free_struct(network_trame);
         exit(1);
-    } 
-
+    }
 }
 
 void chrono_time(int CLOCK, struct timespec *time)
@@ -75,30 +74,92 @@ void create_packet(t_ping *network_trame, t_icmp_headedr *packet_icmp, char *msg
     packet_icmp->header.un.echo.id = getpid();
 
 
-    for (i = 0; i < sizeof(packet_icmp->msg); i++)
+    for (i = 0; i < sizeof(msg); i++)
     {
         packet_icmp->msg[i] =  msg[i];
-        if (i + 1 == sizeof(packet_icmp->msg))
+        if (i + 1 == sizeof(msg) && i + 1 < sizeof(packet_icmp->msg))
         {
-            i++;
             break;
         }
-        i++;
     }
 
     packet_icmp->msg[i] = '\0';
     packet_icmp->header.un.echo.sequence = network_trame->count_pck_send++;
     packet_icmp->header.checksum = checksum(&packet_icmp, sizeof(packet_icmp));
-    
 }
-
-void    send_pkt(t_ping *network_trame, t_icmp_headedr *icmp_v4, struct timespec time)
+/**
+ * @brief Send ping for the server
+ * 
+ * @param network_trame 
+ * @param icmp_v4 
+ * @param time 
+ */
+bool    send_pkt(t_ping *network_trame, t_icmp_headedr *icmp_v4, struct timespec time)
 {
-    clock_gettime(CLOCK_MONOTONIC, &time);
-    if (!sendto(network_trame->socket, icmp_v4, sizeof(icmp_v4), 0,  (struct sockaddr*)&network_trame->ip_hdr->addr_con, sizeof(network_trame->ip_hdr->addr_con)))
+    /*printf("sizeof(dest_addr) = %zu\n", sizeof(*network_trame->ip_hdr->dest_addr));
+    printf("dest: %p\n",  network_trame->ip_hdr->dest_addr);
+    printf("dest: %s\n",  network_trame->ip_hdr->icmp_v4->msg);
+    printf("dest: %p\n",  network_trame->ip_hdr->icmp_v4);
+    printf("family  = %d\n", network_trame->ip_hdr->dest_addr->sin_family);
+    printf("port    = %d\n", network_trame->ip_hdr->dest_addr->sin_port);
+
+    char ip[INET_ADDRSTRLEN];
+
+    if (inet_ntop(AF_INET,
+                &network_trame->ip_hdr->dest_addr->sin_addr,
+                ip,
+                sizeof(ip)))
     {
-        printf("\nError: Packet Sending Failed!\n");
+        printf("IP      = %s\n", ip);
+    }*/
+
+    clock_gettime(CLOCK_MONOTONIC, &time);
+
+    if (sendto(
+        network_trame->socket, 
+        icmp_v4,
+        sizeof(icmp_v4), 
+        0,
+        (struct sockaddr *)network_trame->ip_hdr->dest_addr,  
+        sizeof(*network_trame->ip_hdr->dest_addr)
+    ) < 0)
+    {
+        printf("\n\033[31mError\033[0m Packet Sending Failed!\n");
+        perror("\n\033[31mError\033[0m: ");
+        return (false);
     }
+    //printf("\nPacket Sending\n");
+    return (false);
+}
+/**
+ * @brief For know answer server for client resuqest
+ * 
+ * @param network_trame 
+ * @param icmp_v4 
+ * @param time
+ */
+bool    receive_pkt(t_ping *network_trame)
+{
+    socklen_t   len_addr;
+
+    len_addr = sizeof(network_trame->ip_hdr->src_addr);
+
+    printf("\nPacket recvfrom\n");
+    if (!recvfrom(
+        network_trame->socket, 
+        network_trame->receiv_buffer, 
+        sizeof(network_trame->receiv_buffer), 
+        0,
+        (struct sockaddr*)&network_trame->ip_hdr->src_addr,
+        &len_addr
+    )
+    )
+    {
+        printf("\n\033[31mError\033[0m: Packet Sending Failed!\n");
+        return (true);
+    }
+    printf("\nPacket recvfrom end\n");
+    return (false);
 }
 
 
@@ -112,7 +173,6 @@ void icmp_network(t_ping *network_trame, char **input)
     host_server = network_trame->ip_hdr->host_server;
 
     (void) input;
-    (void) ip_header;
     (void) host_server;
 
     chrono_time(CLOCK_MONOTONIC, &network_trame->tm_packet->tfs);
@@ -126,12 +186,22 @@ void icmp_network(t_ping *network_trame, char **input)
     while (loop_icmp)
     {
         // create packet and set header icmp
-        create_packet(network_trame, network_trame->ip_hdr->icmp_v4, "hellod");
+        create_packet(network_trame, ip_header->icmp_v4, "hello");
+
         // 1sec
         usleep(PING_SLEEP_RATE);
 
         // Send packet
-        send_pkt(network_trame, network_trame->ip_hdr->icmp_v4, network_trame->tm_packet->time_start);
+        send_pkt(network_trame, ip_header->icmp_v4, network_trame->tm_packet->time_start);
+
+        //Receive packet
+        /*if(receive_pkt(network_trame)){}
+        else
+        {*/
+            //printf("send packet et receive\n");
+            clock_gettime(CLOCK_MONOTONIC, &network_trame->tm_packet->time_end);
+        //}
+        //printf("End loop\n");
     }
 
     chrono_time(CLOCK_MONOTONIC, &network_trame->tm_packet->tfe);
@@ -166,8 +236,8 @@ void addr_info(t_ping *network_trame, int code_step)
         printf("%ld(%ld) bytes of data.\n", \
             (DATA_SIZE - sizeof(network_trame->ip_hdr->icmp_v4->header)), \
             (DATA_SIZE - sizeof(network_trame->ip_hdr->icmp_v4->header)+\
-            sizeof(network_trame->ip_hdr->icmp_v4->header)+\
-            sizeof(network_trame->ip_hdr->sa)));
+            sizeof(network_trame->ip_hdr->host_server->h_addr_list[0])+\
+            sizeof(*network_trame->ip_hdr->dest_addr)));
 
         //PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
         // (ICMP Header + ICMP msg  + IPv4)

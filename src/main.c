@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:41:08 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/09 22:23:12 by never            ###   ########.fr       */
+/*   Updated: 2026/08/14 18:24:02 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ int main(int ac, char **av)
     addr_info(&network_trame, END_PRINT);
     
     free_struct(&network_trame);
+    
     return (0);
 }
