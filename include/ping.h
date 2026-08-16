@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/15 01:00:33 by never            ###   ########.fr       */
+/*   Updated: 2026/08/16 19:55:43 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@
 
 void open_socked(t_ping  *network_trame);
 void addr_info(t_ping *network_trame, int code_step);
-void icmp_network(t_ping *network_trame, char **input);
+void icmp_network(t_ping *network_trame);
 
 #endif

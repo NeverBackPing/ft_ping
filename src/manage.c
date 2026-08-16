@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:52 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/15 00:44:16 by never            ###   ########.fr       */
+/*   Updated: 2026/08/16 18:52:06 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ bool init_struct(t_ping *network_trame)
         exit(1);
     }
 
-    network_trame->ip_hdr->dest_addr = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));
+    // init all a 0
+    ft_bzero(network_trame->ip_hdr->icmp_v4, sizeof(t_icmp_headedr));
+    
+    network_trame->ip_hdr->dest_addr = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in)); // size 64
     
     if (network_trame->ip_hdr->dest_addr ==  NULL)
     {
@@ -57,7 +60,7 @@ bool init_struct(t_ping *network_trame)
         exit(1);
     }
     
-    network_trame->count_pck_send = 0; // count of packet send
+    network_trame->flag_sent = false; // interface communication
     network_trame->socket = -1; // interface communication
     network_trame->ttl_size = DATA_SIZE; // Value de l'option  TTL (Time to Live)
     network_trame->rtt_ms = 0;

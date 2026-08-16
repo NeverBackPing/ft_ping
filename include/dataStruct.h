@@ -3,6 +3,7 @@
 
 #define PING_SLEEP_RATE 1000000
 #define DATA_SIZE 64 // Payload data ICMP
+#define RECV_SIZE 1024 // receive reply
 
 //Lib the project ft_ping
 #include "ping.h"
@@ -11,6 +12,7 @@
 enum display
 {
     HEADER_PRINT,
+    PING,
     END_PRINT
 };
 
@@ -38,7 +40,7 @@ typedef struct s_ip
     char                *ip_addr; // IPv4
     char                *rev_hostname; // Reverse hostname IP
 
-    struct hostent      *host_server; // Datas for single hostname (addr, name host, len, list addr)
+    struct hostent      *host_server; // Datas for single hostname (addr, name host, len, list ip)
     t_icmp_headedr      *icmp_v4; // Protocole ICMP for Ipv4
     struct sockaddr_in  *dest_addr; // Internet socket address client (Port, Ip addr IPv4)
     struct sockaddr_in  src_addr; // Internet socket address server (Port, Ip addr IPv4)
@@ -47,6 +49,9 @@ typedef struct s_ip
 /*Command ping*/
 typedef struct s_ping
 {
+
+    bool                     flag_sent; // flag if packet send
+
     char                    receiv_buffer[4096];
     int                     count_pck_send; // count packeyt send
     int                     count_pck_received; // packet receiv
