@@ -212,7 +212,7 @@ void icmp_network(t_ping *network_trame)
                     printf("%ld bytes from %s: icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
                         sizeof(*network_trame->ip_hdr->icmp_v4),\
                         network_trame->ip_hdr->host_server->h_name,\
-                        network_trame->ip_hdr->icmp_v4->header.un.echo.sequence,\
+                        network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
                         network_trame->ttl_size,\
                         network_trame->rtt_ms
                     );
