@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:59 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/16 19:55:43 by never            ###   ########.fr       */
+/*   Updated: 2026/08/17 02:29:45 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <unistd.h>
+#include <math.h>
 #include <stdlib.h>
 #include <signal.h> 
 #include <stdbool.h>

@@ -74,9 +74,7 @@ bool reverse(t_ping *network_trame)
         free_struct(network_trame);
         exit(1);
     }
-    
     ip_header->rev_hostname = (char *)malloc((ft_strlen(buf) + 1) * sizeof(char));
     ft_strcpy(ip_header->rev_hostname, buf);
-
     return (false);
 }

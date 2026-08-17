@@ -21,7 +21,7 @@ NAME= ft_ping
 
 # command compile
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g3 -O1
+CFLAGS=-Wall -Wextra -Werror -g3 -O1 
 
 # Path and target
 PATH_LIB = lib
@@ -57,7 +57,7 @@ header:
 	@echo "$(BLUE)$$HEADER$(RESET)"
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME) -lm
 
 show:
 	@printf "NAME  		:$(NAME)\n"

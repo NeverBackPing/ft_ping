@@ -205,28 +205,94 @@ void icmp_network(t_ping *network_trame)
             {
                 printf("Request timeout for icmp_seq %d\n",  recv_header->un.echo.sequence);
             } 
-            else
+            else if (recv_header->type == 8 && recv_header->code == 0)
             {
-                printf("%ld bytes from %s (%s) msg_seq = %d ttl = %d rtt = %.2Lf ms.\n", 
-                    sizeof(*network_trame->ip_hdr->icmp_v4),\
-                    network_trame->ip_hdr->host_server->h_name,\
-                    network_trame->ip_hdr->host_server->h_addr_list[0],\
-                    network_trame->ip_hdr->icmp_v4->header.un.echo.sequence,\
-                    network_trame->ttl_size,\
-                    network_trame->rtt_ms
-                );
+                if (network_trame->is_ip)
+                {
+                    printf("%ld bytes from %s: icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
+                        sizeof(*network_trame->ip_hdr->icmp_v4),\
+                        network_trame->ip_hdr->host_server->h_name,\
+                        network_trame->ip_hdr->icmp_v4->header.un.echo.sequence,\
+                        network_trame->ttl_size,\
+                        network_trame->rtt_ms
+                    );
+                }
+                else
+                {
+                    char ip_str[INET_ADDRSTRLEN];
+
+                    printf("%ld bytes from %s (%s): icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
+                        sizeof(*network_trame->ip_hdr->icmp_v4),\
+                        network_trame->ip_hdr->host_server->h_name,\
+                        inet_ntop(network_trame->ip_hdr->host_server->h_addrtype, \
+                            *network_trame->ip_hdr->host_server->h_addr_list, \
+                            ip_str, sizeof(ip_str)),\
+                        network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
+                        network_trame->ttl_size,\
+                        network_trame->rtt_ms
+                    );
+                }
+                network_trame->count_pck_received++;
+
+                if ( network_trame->rtt_ms < network_trame->rtt_min)
+                    network_trame->rtt_min =  network_trame->rtt_ms;
+
+                if ( network_trame->rtt_ms > network_trame->rtt_max)
+                    network_trame->rtt_max =  network_trame->rtt_ms;
+
+                network_trame->rtt_min =  network_trame->rtt_ms;
+                network_trame->rtt_max =  network_trame->rtt_ms;
+
+                network_trame->rtt_sum +=  network_trame->rtt_ms;
                 
+                network_trame->rtt_avg = network_trame->rtt_sum / network_trame->count_pck_received;
                 //PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
                 //64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=3.32 ms
-
+                
                 //PING google.com (172.217.22.46) 56(84) bytes of data.
                 //64 bytes from pnpara-ad-in-f14.1e100.net (172.217.22.46): icmp_seq=1 ttl=117 time=2.45 ms
+                network_trame->rtt_mdev = 0.0L;
+
+                for (int i = 0; i < network_trame->count_pck_received; i++)
+                {
+                    long double diff;
+
+                    diff = network_trame->rtt_values[i] -
+                        network_trame->rtt_avg;
+
+                    network_trame->rtt_mdev += diff * diff;
+                }
+
+                network_trame->rtt_mdev =
+                sqrtl(network_trame->rtt_mdev /
+                    network_trame->count_pck_received);
             }
         }
     }
 
     chrono_time(CLOCK_MONOTONIC, &network_trame->tm_packet->tfe);
     
+    network_trame->total_ms =
+    (long double)(network_trame->tm_packet->tfe.tv_sec -
+                  network_trame->tm_packet->tfs.tv_sec) * 1000.0L
+    +
+    (long double)(network_trame->tm_packet->tfe.tv_nsec -
+                  network_trame->tm_packet->tfs.tv_nsec) / 1000000.0L;
+
+    printf("\n--- %s ft_ping statistics ---\n", network_trame->ip_hdr->host_server->h_name);
+    printf("%d packets transmitted, %d received, %.0f%% packet loss, time %.0Lfms\n",
+        network_trame->count_pck_send,\
+        network_trame->count_pck_received,\
+        ((network_trame->count_pck_send - network_trame->count_pck_received) /\
+        (double)network_trame->count_pck_send) * 100.0,\
+        network_trame->total_ms
+    );
+    printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n",
+        network_trame->rtt_min,\
+        network_trame->rtt_avg,\
+        network_trame->rtt_max,\
+        network_trame->rtt_mdev\
+    );
     addr_info(network_trame, END_PRINT);
     free_struct(network_trame);
     exit(0);
@@ -266,7 +332,6 @@ void addr_info(t_ping *network_trame, int code_step)
     else
     {
         //64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=3.32 ms
-        printf("\n");
-        printf("END\n");
+
     }
 }

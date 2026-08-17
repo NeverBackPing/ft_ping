@@ -42,6 +42,7 @@ typedef struct s_ip
 
     struct hostent      *host_server; // Datas for single hostname (addr, name host, len, list ip)
     t_icmp_headedr      *icmp_v4; // Protocole ICMP for Ipv4
+
     struct sockaddr_in  *dest_addr; // Internet socket address client (Port, Ip addr IPv4)
     struct sockaddr_in  src_addr; // Internet socket address server (Port, Ip addr IPv4)
 } t_ip;
@@ -50,6 +51,7 @@ typedef struct s_ip
 typedef struct s_ping
 {
 
+    bool                     is_ip;
     bool                     flag_sent; // flag if packet send
 
     char                    receiv_buffer[4096];
@@ -58,6 +60,12 @@ typedef struct s_ping
     int                     ttl_size; // size protocole
     int                     socket; // Interface of communication
 
+    long double             rtt_values[10000];
+    long double             rtt_min;
+    long double             rtt_max;
+    long double             rtt_sum;
+    long double             rtt_avg;
+    long double             rtt_mdev;
     long double             rtt_ms; // Round-Trip Time  in microseconde
     long double             total_ms; // total in microseconde
 

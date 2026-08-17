@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:40:52 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/16 18:52:06 by never            ###   ########.fr       */
+/*   Updated: 2026/08/17 01:11:31 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ bool init_struct(t_ping *network_trame)
         exit(1);
     }
     
+    network_trame->is_ip = false; // check if a ip or hostname
     network_trame->flag_sent = false; // interface communication
     network_trame->socket = -1; // interface communication
     network_trame->ttl_size = DATA_SIZE; // Value de l'option  TTL (Time to Live)
