@@ -4,6 +4,9 @@
 //Lib the project ft_ping
 #include "ping.h"
 
+#define PING_SLEEP_RATE 1000000 
+#define DATA_SIZE 64 
+
 /*comment need et name*/
 enum display
 {
@@ -14,6 +17,7 @@ enum display
 typedef struct s_icmp_headedr
 {
     struct icmphdr header;
+    char msg[DATA_SIZE];
 } t_icmp_headedr;
 
 typedef struct s_ip
@@ -33,7 +37,5 @@ typedef struct s_ping
     t_ip    *ip_hdr;
 
 } t_ping;
-
-#define PING_SLEEP_RATE 1000000 
 
 #endif
