@@ -161,6 +161,93 @@ void time_time(t_ping *network_trame, t_time_packet *time)
         + (time->time_end.tv_nsec - time->time_start.tv_nsec) / 1000000.0;
 }
 
+void display_reply_option(t_ping *network_trame)
+{
+    if (network_trame->is_ip)
+    {
+        printf("%ld bytes from %s: icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms.\n", 
+            sizeof(*network_trame->ip_hdr->icmp_v4),\
+            network_trame->ip_hdr->host_server->h_name,\
+            network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
+            network_trame->ip_hdr->icmp_v4->header.un.echo.id,\
+            network_trame->ttl_size,\
+            network_trame->rtt_ms
+        );
+    }
+    else
+    {
+        char ip_str[INET_ADDRSTRLEN];
+
+        printf("%ld bytes from %s (%s): icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms.\n", 
+            sizeof(*network_trame->ip_hdr->icmp_v4),\
+            network_trame->ip_hdr->host_server->h_name,\
+            inet_ntop(network_trame->ip_hdr->host_server->h_addrtype, \
+                *network_trame->ip_hdr->host_server->h_addr_list, \
+                ip_str, sizeof(ip_str)),\
+            network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
+            network_trame->ip_hdr->icmp_v4->header.un.echo.id,\
+            network_trame->ttl_size,\
+            network_trame->rtt_ms
+        );
+    }
+}
+
+void display_reply(t_ping *network_trame)
+{
+    if (network_trame->is_ip)
+    {
+        printf("%ld bytes from %s: icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
+            sizeof(*network_trame->ip_hdr->icmp_v4),\
+            network_trame->ip_hdr->host_server->h_name,\
+            network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
+            network_trame->ttl_size,\
+            network_trame->rtt_ms
+        );
+    }
+    else
+    {
+        char ip_str[INET_ADDRSTRLEN];
+
+        printf("%ld bytes from %s (%s): icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
+            sizeof(*network_trame->ip_hdr->icmp_v4),\
+            network_trame->ip_hdr->host_server->h_name,\
+            inet_ntop(network_trame->ip_hdr->host_server->h_addrtype, \
+                *network_trame->ip_hdr->host_server->h_addr_list, \
+                ip_str, sizeof(ip_str)),\
+            network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
+            network_trame->ttl_size,\
+            network_trame->rtt_ms
+        );
+    }
+}
+void stat_icmp(t_ping *network_trame)
+{
+    if ( network_trame->rtt_ms < network_trame->rtt_min)
+        network_trame->rtt_min =  network_trame->rtt_ms;
+
+    if ( network_trame->rtt_ms > network_trame->rtt_max)
+        network_trame->rtt_max =  network_trame->rtt_ms;
+
+    network_trame->rtt_min =  network_trame->rtt_ms;
+    network_trame->rtt_max =  network_trame->rtt_ms;
+    network_trame->rtt_sum +=  network_trame->rtt_ms;
+    network_trame->rtt_avg = network_trame->rtt_sum / network_trame->count_pck_received;
+    network_trame->rtt_mdev = 0.0L;
+
+    for (int i = 0; i < network_trame->count_pck_received; i++)
+    {
+        long double diff;
+
+        diff = network_trame->rtt_values[i] -
+            network_trame->rtt_avg;
+
+        network_trame->rtt_mdev += diff * diff;
+    }
+
+    network_trame->rtt_mdev =
+    sqrtl(network_trame->rtt_mdev /
+        network_trame->count_pck_received);
+}
 
 void icmp_network(t_ping *network_trame)
 {
@@ -207,65 +294,12 @@ void icmp_network(t_ping *network_trame)
             } 
             else if (recv_header->type == 8 && recv_header->code == 0)
             {
-                if (network_trame->is_ip)
-                {
-                    printf("%ld bytes from %s: icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
-                        sizeof(*network_trame->ip_hdr->icmp_v4),\
-                        network_trame->ip_hdr->host_server->h_name,\
-                        network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
-                        network_trame->ttl_size,\
-                        network_trame->rtt_ms
-                    );
-                }
+                if (network_trame->option)
+                    display_reply_option(network_trame);
                 else
-                {
-                    char ip_str[INET_ADDRSTRLEN];
-
-                    printf("%ld bytes from %s (%s): icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
-                        sizeof(*network_trame->ip_hdr->icmp_v4),\
-                        network_trame->ip_hdr->host_server->h_name,\
-                        inet_ntop(network_trame->ip_hdr->host_server->h_addrtype, \
-                            *network_trame->ip_hdr->host_server->h_addr_list, \
-                            ip_str, sizeof(ip_str)),\
-                        network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
-                        network_trame->ttl_size,\
-                        network_trame->rtt_ms
-                    );
-                }
+                    display_reply(network_trame);
                 network_trame->count_pck_received++;
-
-                if ( network_trame->rtt_ms < network_trame->rtt_min)
-                    network_trame->rtt_min =  network_trame->rtt_ms;
-
-                if ( network_trame->rtt_ms > network_trame->rtt_max)
-                    network_trame->rtt_max =  network_trame->rtt_ms;
-
-                network_trame->rtt_min =  network_trame->rtt_ms;
-                network_trame->rtt_max =  network_trame->rtt_ms;
-
-                network_trame->rtt_sum +=  network_trame->rtt_ms;
-                
-                network_trame->rtt_avg = network_trame->rtt_sum / network_trame->count_pck_received;
-                //PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-                //64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=3.32 ms
-                
-                //PING google.com (172.217.22.46) 56(84) bytes of data.
-                //64 bytes from pnpara-ad-in-f14.1e100.net (172.217.22.46): icmp_seq=1 ttl=117 time=2.45 ms
-                network_trame->rtt_mdev = 0.0L;
-
-                for (int i = 0; i < network_trame->count_pck_received; i++)
-                {
-                    long double diff;
-
-                    diff = network_trame->rtt_values[i] -
-                        network_trame->rtt_avg;
-
-                    network_trame->rtt_mdev += diff * diff;
-                }
-
-                network_trame->rtt_mdev =
-                sqrtl(network_trame->rtt_mdev /
-                    network_trame->count_pck_received);
+                stat_icmp(network_trame);
             }
         }
     }
@@ -325,13 +359,5 @@ void addr_info(t_ping *network_trame, int code_step)
             (DATA_SIZE - sizeof(network_trame->ip_hdr->icmp_v4->header)+\
             sizeof(network_trame->ip_hdr->host_server->h_addr_list[0])+\
             sizeof(*network_trame->ip_hdr->dest_addr)));
-
-        //PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-        // (ICMP Header + ICMP msg  + IPv4)
-    }
-    else
-    {
-        //64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=3.32 ms
-
     }
 }

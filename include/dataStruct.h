@@ -53,6 +53,7 @@ typedef struct s_ping
 
     bool                     is_ip;
     bool                     flag_sent; // flag if packet send
+    bool                     option; // flag if packet send
 
     char                    receiv_buffer[4096];
     int                     count_pck_send; // count packeyt send
