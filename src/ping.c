@@ -360,12 +360,4 @@ void addr_info(t_ping *network_trame, int code_step)
             sizeof(network_trame->ip_hdr->host_server->h_addr_list[0])+\
             sizeof(*network_trame->ip_hdr->dest_addr)));
     }
-<<<<<<< HEAD
-    else
-    {
-        //64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=3.32 ms
-    }
 }
-=======
-}
->>>>>>> f62fe0bc51f0508b8407b9e2fe7dbf32164df2fa
