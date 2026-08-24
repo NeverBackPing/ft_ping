@@ -6,7 +6,7 @@
 /*   By: never <never@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/03 17:41:08 by sjossain          #+#    #+#             */
-/*   Updated: 2026/08/17 01:25:43 by never            ###   ########.fr       */
+/*   Updated: 2026/08/18 13:15:30 by never            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "../include/manage.h"
 #include "../include/dataStruct.h"
 
-void check_option(int count_arg, char *option)
+bool check_option(int count_arg, char *option)
 {
     if (count_arg == 2)
     {
@@ -25,13 +25,14 @@ void check_option(int count_arg, char *option)
             printf("\033[31mError\033[0m: Destination address required:\n");
             exit(1);
         }
-        return ;
+        return (false);
     }
     if (option[0] != '-' || option[1] != 'v' || ft_strlen(option) != 2)
     {
         printf("\033[31mError\033[0m: Bad option:\n");
         exit(1);
     }
+    return (true);
 }
 
 void check_address(t_ping *network_trame, char *option)
@@ -58,7 +59,7 @@ int main(int ac, char **av)
     t_ping network_trame = {0};
     
     // check option
-    check_option(ac, av[ac - 2]);
+    network_trame.option = check_option(ac, av[ac - 2]);
     
     // init instance
     init_struct(&network_trame); 
