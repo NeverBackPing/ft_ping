@@ -332,6 +332,5 @@ void addr_info(t_ping *network_trame, int code_step)
     else
     {
         //64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=3.32 ms
-
     }
 }
