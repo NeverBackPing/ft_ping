@@ -54,7 +54,7 @@ $(LIBFT):
 	@$(MAKE) -C dep/libft/
 
 header:
-	@echo "$(BLUE)$$HEADER$(RESET)"
+	@printf "$(BLUE)$$HEADER$(RESET)"
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME) -lm
