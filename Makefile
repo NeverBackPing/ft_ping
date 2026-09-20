@@ -59,6 +59,12 @@ header:
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME) -lm
 
+
+run:
+	podman build -t debian-local .
+	podman run -it --rm --cap-add=NET_RAW debian-local
+
+
 show:
 	@printf "NAME  		:$(NAME)\n"
 	@printf "CC		:$(CC)\n"
