@@ -54,13 +54,13 @@ $(LIBFT):
 	@$(MAKE) -C dep/libft/
 
 header:
-	@printf "$(BLUE)$$HEADER$(RESET)"
+	@printf "$(BLUE)$$HEADER$(RESET)\n"
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME) -lm
 
 
-run:
+correction:
 	podman build -t debian-local .
 	podman run -it --rm --cap-add=NET_RAW debian-local
 
@@ -72,7 +72,7 @@ show:
 	@printf "SRC		:$(SRC)\n"
 	@printf "OBJ		:$(OBJ)\n"
 
-clean_not_all:
+clean-obj:
 	rm -rf $(OBJ)
 
 clean:
@@ -83,4 +83,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all show clean_not_all clean fclean header re
+.PHONY: all show clean-obj clean fclean correction re

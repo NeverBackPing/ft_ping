@@ -13,4 +13,3 @@ WORKDIR /ft_ping
 COPY . .
 
 CMD ["/bin/bash"]
-

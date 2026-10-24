@@ -165,7 +165,7 @@ void display_reply_option(t_ping *network_trame)
 {
     if (network_trame->is_ip)
     {
-        printf("%ld bytes from %s: icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms.\n", 
+        printf("%ld bytes from %s: icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms\n", 
             sizeof(*network_trame->ip_hdr->icmp_v4),\
             network_trame->ip_hdr->host_server->h_name,\
             network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
@@ -178,7 +178,7 @@ void display_reply_option(t_ping *network_trame)
     {
         char ip_str[INET_ADDRSTRLEN];
 
-        printf("%ld bytes from %s (%s): icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms.\n", 
+        printf("%ld bytes from %s (%s): icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms\n", 
             sizeof(*network_trame->ip_hdr->icmp_v4),\
             network_trame->ip_hdr->host_server->h_name,\
             inet_ntop(network_trame->ip_hdr->host_server->h_addrtype, \
@@ -196,7 +196,7 @@ void display_reply(t_ping *network_trame)
 {
     if (network_trame->is_ip)
     {
-        printf("%ld bytes from %s: icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
+        printf("%ld bytes from %s: icmp_seq=%d ttl=%d rtt=%.2Lf ms\n", 
             sizeof(*network_trame->ip_hdr->icmp_v4),\
             network_trame->ip_hdr->host_server->h_name,\
             network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
@@ -208,7 +208,7 @@ void display_reply(t_ping *network_trame)
     {
         char ip_str[INET_ADDRSTRLEN];
 
-        printf("%ld bytes from %s (%s): icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
+        printf("%ld bytes from %s (%s): icmp_seq=%d ttl=%d rtt=%.2Lf ms\n", 
             sizeof(*network_trame->ip_hdr->icmp_v4),\
             network_trame->ip_hdr->host_server->h_name,\
             inet_ntop(network_trame->ip_hdr->host_server->h_addrtype, \
