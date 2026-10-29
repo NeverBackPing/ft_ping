@@ -21,9 +21,10 @@ NAME= ft_ping
 
 # command compile
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g3 -O1 
+CFLAGS=-Wall -Wextra -Werror
 
 # Path and target
+LIB = lib
 PATH_LIB = lib
 BUILD_DIR= build
 SRC= src/%.c
@@ -44,43 +45,53 @@ $(OBJS_DIR)/%.o: $(SRC)
 	@mkdir -p $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-
+header = "$(BLUE)$$HEADER$(RESET)\n"
 
 # compilation rules
-all: $(LIBFT) $(NAME) header
+all: $(LIB) $(NAME) 
+	@printf $(header)
 
-$(LIBFT):
+$(LIB):
 	@mkdir -p $(PATH_LIB)
 	@$(MAKE) -C dep/libft/
-
-header:
-	@printf "$(BLUE)$$HEADER$(RESET)"
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME) -lm
 
 
-run:
+c correction:
 	podman build -t debian-local .
 	podman run -it --rm --cap-add=NET_RAW debian-local
 
+cj clean-obj:
+	rm -rf $(OBJ)
 
-show:
+cl clean:
+	rm -rf $(OBJ) $(OBJS_DIR) $(BUILD_DIR)
+
+fc fclean: clean
+	rm -rf $(NAME) $(LIBFT) $(PATH_LIB)
+
+re: fclean all
+
+h help:
+	@printf "Usage: make [OPTION]\n"
+	@printf "Build of project ft_ping\n\n"
+	@printf "Mandatory arguments for option.\n"
+	@printf "all: compilation rule\n"
+	@printf "c correction: create a environement for test the programme\n"
+	@printf "cj clean-obj: clean file obj\n"
+	@printf "cl clean: clean folder obj and build directory\n"
+	@printf "fc fclean: clean build directory, folder lib and programme\n"
+	@printf "re: clean all and rebuild\n"
+	@printf "sc show-compilation: show the compilation of target\n"
+	@printf "h help: show command\n"
+
+sc show-compilation:
 	@printf "NAME  		:$(NAME)\n"
 	@printf "CC		:$(CC)\n"
 	@printf "CFLAGS		:$(CFLAGS)\n"
 	@printf "SRC		:$(SRC)\n"
 	@printf "OBJ		:$(OBJ)\n"
 
-clean_not_all:
-	rm -rf $(OBJ)
-
-clean:
-	rm -rf $(OBJ) $(OBJS_DIR) $(BUILD_DIR)
-
-fclean: clean
-	rm -rf $(NAME) $(LIBFT) $(PATH_LIB)
-
-re: fclean all
-
-.PHONY: all show clean_not_all clean fclean header re
+.PHONY: all show clean-obj clean fclean correction help re

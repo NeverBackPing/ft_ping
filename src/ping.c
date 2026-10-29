@@ -142,11 +142,11 @@ bool    receive_pkt(t_ping *network_trame)
         (struct sockaddr *)&network_trame->ip_hdr->src_addr,
         &len_addr
     );
-    if (ret <= 0)
+    if (ret == 0)
     {
         if (errno == EINTR)
         {
-            return (true);;
+            return (true);
         }
     }
 
@@ -165,7 +165,7 @@ void display_reply_option(t_ping *network_trame)
 {
     if (network_trame->is_ip)
     {
-        printf("%ld bytes from %s: icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms.\n", 
+        printf("%ld bytes from %s: icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms\n", 
             sizeof(*network_trame->ip_hdr->icmp_v4),\
             network_trame->ip_hdr->host_server->h_name,\
             network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
@@ -178,7 +178,7 @@ void display_reply_option(t_ping *network_trame)
     {
         char ip_str[INET_ADDRSTRLEN];
 
-        printf("%ld bytes from %s (%s): icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms.\n", 
+        printf("%ld bytes from %s (%s): icmp_seq=%d ident=%d ttl=%d rtt=%.2Lf ms\n", 
             sizeof(*network_trame->ip_hdr->icmp_v4),\
             network_trame->ip_hdr->host_server->h_name,\
             inet_ntop(network_trame->ip_hdr->host_server->h_addrtype, \
@@ -196,7 +196,7 @@ void display_reply(t_ping *network_trame)
 {
     if (network_trame->is_ip)
     {
-        printf("%ld bytes from %s: icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
+        printf("%ld bytes from %s: icmp_seq=%d ttl=%d rtt=%.2Lf ms\n", 
             sizeof(*network_trame->ip_hdr->icmp_v4),\
             network_trame->ip_hdr->host_server->h_name,\
             network_trame->ip_hdr->icmp_v4->header.un.echo.sequence + 1,\
@@ -208,7 +208,7 @@ void display_reply(t_ping *network_trame)
     {
         char ip_str[INET_ADDRSTRLEN];
 
-        printf("%ld bytes from %s (%s): icmp_seq=%d ttl=%d rtt=%.2Lf ms.\n", 
+        printf("%ld bytes from %s (%s): icmp_seq=%d ttl=%d rtt=%.2Lf ms\n", 
             sizeof(*network_trame->ip_hdr->icmp_v4),\
             network_trame->ip_hdr->host_server->h_name,\
             inet_ntop(network_trame->ip_hdr->host_server->h_addrtype, \
@@ -292,13 +292,16 @@ void icmp_network(t_ping *network_trame)
             {
                 printf("Request timeout for icmp_seq %d\n",  recv_header->un.echo.sequence);
             } 
-            else if (recv_header->type == 8 && recv_header->code == 0)
+            else if (recv_header->type == 8)
             {
-                if (network_trame->option)
+                if (recv_header->code != ICMP_NET_UNREACH)
+                {
+                    if (network_trame->option)
                     display_reply_option(network_trame);
-                else
+                    else
                     display_reply(network_trame);
-                network_trame->count_pck_received++;
+                    network_trame->count_pck_received++;
+                }
                 stat_icmp(network_trame);
             }
         }
@@ -321,12 +324,16 @@ void icmp_network(t_ping *network_trame)
         (double)network_trame->count_pck_send) * 100.0,\
         network_trame->total_ms
     );
-    printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n",
-        network_trame->rtt_min,\
-        network_trame->rtt_avg,\
-        network_trame->rtt_max,\
-        network_trame->rtt_mdev\
-    );
+    if (network_trame->count_pck_received > 0)
+    {
+
+        printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n",
+            network_trame->rtt_min,\
+            network_trame->rtt_avg,\
+            network_trame->rtt_max,\
+            network_trame->rtt_mdev\
+        );
+    }
     addr_info(network_trame, END_PRINT);
     free_struct(network_trame);
     exit(0);
