@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     build-essential \
     curl \
+    tcpdump \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /ft_ping

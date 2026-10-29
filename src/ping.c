@@ -113,7 +113,7 @@ bool    send_pkt(t_ping *network_trame, t_icmp_headedr *icmp_v4)
         0,
         (struct sockaddr *)network_trame->ip_hdr->dest_addr,  
         sizeof(*network_trame->ip_hdr->dest_addr)
-    ) < 0)
+    ) <= 0)
     {
         printf("\n\033[31mError\033[0m Packet Sending Failed!\n");
         return (false);
@@ -142,14 +142,14 @@ bool    receive_pkt(t_ping *network_trame)
         (struct sockaddr *)&network_trame->ip_hdr->src_addr,
         &len_addr
     );
-    if (ret == 0)
+    if (ret <= 0)
     {
         if (errno == EINTR)
         {
             return (true);
         }
     }
-
+    //printf("2AAAAAAAAAAAAAAAAAAAAAAAAAA\n");
     network_trame->flag_sent = true;
     return (false);
 }
@@ -286,24 +286,21 @@ void icmp_network(t_ping *network_trame)
 
             time_time(network_trame, network_trame->tm_packet);
 
-            recv_header = &network_trame->ip_hdr->icmp_v4->header;
+            recv_header = (struct icmphdr *)network_trame->receiv_buffer;
 
-            if (recv_header->type != 0 && recv_header->code != 0)
+            if (recv_header->type == 0 && recv_header->code == 0)
             {
-                printf("Request timeout for icmp_seq %d\n",  recv_header->un.echo.sequence);
-            } 
-            else if (recv_header->type == 8)
-            {
-                if (recv_header->code != ICMP_NET_UNREACH)
-                {
-                    if (network_trame->option)
-                    display_reply_option(network_trame);
-                    else
-                    display_reply(network_trame);
-                    network_trame->count_pck_received++;
-                }
-                stat_icmp(network_trame);
+                //printf("Request timeout for icmp_seq %d\n",  recv_header->un.echo.sequence);
             }
+            else
+            {
+                if (network_trame->option)
+                    display_reply_option(network_trame);
+                else
+                    display_reply(network_trame);
+                network_trame->count_pck_received++;
+            }
+            stat_icmp(network_trame);
         }
     }
 
